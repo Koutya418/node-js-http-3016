@@ -1,0 +1,14 @@
+{
+  "yaki-tofu": {
+    "firstItem": "焼き肉",
+    "secondItem": "湯豆腐"
+  },
+  "rice-bread": {
+    "firstItem": "ごはん",
+    "secondItem": "パン"
+  },
+  "sushi-pizza": {
+    "firstItem": "寿司",
+    "secondItem": "ピザ"
+  }
+}

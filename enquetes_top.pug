@@ -1,0 +1,11 @@
+doctype html
+html(lang="ja")
+  head
+    meta(charset="UTF-8")
+    title アンケート一覧
+  body
+    h1 アンケート一覧
+    ul
+      - for (key in enquetes)
+        li
+          a(href='/enquetes/'.concat(key)) #{enquetes[key].firstItem}・#{enquetes[key].secondItem}

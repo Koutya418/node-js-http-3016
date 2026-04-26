@@ -1,6 +1,7 @@
 'use strict';
 const http = require('node:http');
 const pug = require('pug');
+const fs = require('fs');
 const server = http
   .createServer((req, res) => {
     const now = new Date();
@@ -11,31 +12,35 @@ const server = http
 
     switch (req.method) {
       case 'GET':
-        if (req.url === '/enquetes/yaki-tofu') {
-          res.write(
-            pug.renderFile('./form.pug', {
-              path: req.url,
-              firstItem: '焼き肉',
-              secondItem: '湯豆腐'
-            })
-          );
-        } else if (req.url === '/enquetes/rice-bread') {
-          res.write(
-            pug.renderFile('./form.pug', {
-              path: req.url,
-              firstItem: 'ごはん',
-              secondItem: 'パン'
-            })
-          );
-        } else if (req.url === '/enquetes/sushi-pizza') {
-          res.write(
-            pug.renderFile('./form.pug', {
-              path: req.url,
-              firstItem: '寿司',
-              secondItem: 'ピザ'
-            })
-          );
-        }
+        const category_directory =  typeof req.url.split('/').slice(1)[0] === 'undefined' ? 'undefined' : req.url.split('/').slice(1)[0];
+        console.info(typeof req.url.split('/').slice(1)[0])
+        switch (category_directory) {
+          case '':
+            res.write(
+              pug.renderFile('./top.pug', {enquetes_path: '/enquetes'})
+            )
+            break;
+          case 'enquetes':
+            const enquetes = JSON.parse(fs.readFileSync('./enquetes.json'))
+            const end_directory = req.url.split('/').slice(-1)[0];
+            const enquete = enquetes[end_directory];
+            if (end_directory === 'enquetes') {
+              res.write(
+                pug.renderFile('./enquetes_top.pug', {enquetes: enquetes})
+              );
+            } else if (typeof enquete != 'undefined') {
+              res.write(
+                pug.renderFile('./form.pug', Object.assign({path: req.url}, enquete))
+              );
+            } else {
+              console.info(`[${now}]無効なURL${category_directory}`)
+            };
+            break;
+          default:
+            res.write('このページは存在しません')
+            console.info(`[${now}]無効なURL${category_directory}`)
+            break;
+        };
         res.end();
         break;
       case 'POST':
