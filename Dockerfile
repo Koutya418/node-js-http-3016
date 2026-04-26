@@ -12,3 +12,6 @@ ENV LANG ja_JP.utf8
 ENV TZ=Asia/Tokyo
 
 WORKDIR /app
+COPY . /app
+RUN yarn install
+CMD ["node", "index.js"]
